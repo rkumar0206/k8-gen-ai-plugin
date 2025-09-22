@@ -6,7 +6,7 @@ GEMINI_API_KEY as env varaiables
 ## How to use/configure this plugin?
 
  1. In you springboot application buid.gradle add below configuration:
- ```json
+ ```build.gradle
 
 plugins {
     id 'java'
