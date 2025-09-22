@@ -11,7 +11,7 @@
         
 
 ## Requirements
-GEMINI_API_KEY as env variables. <b>API KEY is not stored anywhere in the code.<b>
+GEMINI_API_KEY as env variables. <b>(API KEY is not stored anywhere in the code.)<b>
 
 ## How to use/configure this plugin?
 
@@ -32,7 +32,7 @@ k8Gen {
 }
 ```
 2. Create `k8-gen-config.json` file in root directory of your project.
-- Use below json file to generate files according to your need
+- Use below json to generate files according to your need
 
 ```json
 
