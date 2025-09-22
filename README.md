@@ -87,3 +87,7 @@ k8Gen {
   "extraK8sResources": ["pdb", "networkPolicy", "rbac", "serviceAccount"]
 }
 ```
+
+## How to run the task?
+Use command:
+`gradle generateK8DeploymentConfig`
