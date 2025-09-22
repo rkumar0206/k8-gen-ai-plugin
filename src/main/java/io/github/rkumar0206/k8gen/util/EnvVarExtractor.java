@@ -1,4 +1,4 @@
-package com.rtb.k8gen.util;
+package io.github.rkumar0206.k8gen.util;
 
 import org.gradle.api.Project;
 
@@ -56,5 +56,9 @@ public class EnvVarExtractor {
             vars.add(matcher.group(1)); // only the variable name
         }
         return vars;
+    }
+
+    EnvVarExtractor() {
+
     }
 }

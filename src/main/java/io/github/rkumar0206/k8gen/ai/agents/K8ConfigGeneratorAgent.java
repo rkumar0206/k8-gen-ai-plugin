@@ -1,15 +1,29 @@
-package com.rtb.k8gen.ai.agents;
+package io.github.rkumar0206.k8gen.ai.agents;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rtb.k8gen.model.DeploymentConfig;
+import io.github.rkumar0206.k8gen.model.DeploymentConfig;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel;
 
+/**
+ * `K8ConfigGeneratorAgent` is an agent responsible for generating Kubernetes configuration files
+ * based on provided deployment details. It uses a specified chat model (e.g., Google's Gemini) to
+ * intelligently create these configurations from a structured prompt.
+ *
+ * <p>This class encapsulates the logic for interacting with a large language model (LLM) to
+ * automate the creation of Kubernetes manifests, reducing manual effort and potential for human error.
+ */
 public class K8ConfigGeneratorAgent {
 
     private final ChatModel model;
 
+    /**
+     * Constructs a new `K8ConfigGeneratorAgent`.
+     *
+     * @param apiKey The API key for authenticating with the chat model service.
+     * @param modelName The name of the specific chat model to use for generation (e.g., "gemini-pro").
+     */
     public K8ConfigGeneratorAgent(String apiKey, String modelName) {
         this.model = GoogleAiGeminiChatModel.builder()
                 .apiKey(apiKey)
@@ -19,12 +33,37 @@ public class K8ConfigGeneratorAgent {
     }
 
 
+    /**
+     * Generates Kubernetes configuration files (e.g., YAML) by sending a detailed prompt to the
+     * configured chat model.
+     *
+     * <p>This method first constructs a prompt from the given deployment configuration and version,
+     * then uses the chat model to generate the final configuration string.
+     *
+     * @param deploymentConfig An object containing the application's deployment details
+     * @param version The version number for the deployment.
+     * @return A {@code String} containing the generated Kubernetes configuration (e.g., YAML).
+     * @throws JsonProcessingException If there is an error processing the deployment configuration
+     * to generate the prompt.
+     */
     public String generateConfigs(DeploymentConfig deploymentConfig, Integer version) throws JsonProcessingException {
 
         String prompt = generatePrompt(deploymentConfig, version);
         return model.chat(prompt);
     }
 
+    /**
+     * Constructs the specific text prompt to be sent to the chat model.
+     *
+     * <p>This prompt is carefully structured to guide the LLM in generating accurate and valid
+     * Kubernetes YAML for the specified application deployment.
+     *
+     * @param deploymentConfig An object containing the application's deployment details.
+     * @param version The version number for using different prompts (internal use only)
+     * @return A formatted {@code String} prompt ready for use with the chat model.
+     * @throws JsonProcessingException If the {@code deploymentConfig} cannot be serialized or
+     * processed correctly for the prompt.
+     */
     public String generatePrompt(DeploymentConfig deploymentConfig, Integer version) throws JsonProcessingException {
 
         String inputConfig = new ObjectMapper().writeValueAsString(deploymentConfig);

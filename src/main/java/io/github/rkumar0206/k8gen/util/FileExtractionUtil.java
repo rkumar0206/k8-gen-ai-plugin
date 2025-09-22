@@ -1,4 +1,4 @@
-package com.rtb.k8gen.util;
+package io.github.rkumar0206.k8gen.util;
 
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.DumperOptions;
@@ -12,9 +12,9 @@ import java.util.regex.Pattern;
 
 /**
  * Utility for extracting file definitions from text blocks
- * with markers like -----BEGIN_FILE: <filename>----- and
- * -----END_FILE: <filename>-----.
- *
+ * with markers like -----BEGIN_FILE: filename----- and
+ * -----END_FILE: filename-----.
+ * <p>
  * It can also export the extracted mapping into a YAML file.
  */
 public class FileExtractionUtil {
@@ -63,11 +63,11 @@ public class FileExtractionUtil {
 
     /**
      * Converts the extracted mapping to a YAML string.
-     *
+     * <p>
      * Example structure:
      * files:
-     *   Dockerfile: "<content>"
-     *   .dockerignore: "<content>"
+     *   Dockerfile: "content"
+     *   .dockerignore: "content"
      *
      * @param files map of filename -> content
      * @return YAML string

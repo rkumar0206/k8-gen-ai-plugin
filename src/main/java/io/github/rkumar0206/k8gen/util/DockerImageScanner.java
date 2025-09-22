@@ -1,4 +1,4 @@
-package com.rtb.k8gen.util;
+package io.github.rkumar0206.k8gen.util;
 
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
@@ -37,6 +37,8 @@ public class DockerImageScanner {
 
     /**
      * Scans the Gradle dependencies of the project and infers possible Docker images.
+     * @param project consumer project
+     * @return list of additional docker images from build.gradle dependencies
      */
     public static List<String> scanDependenciesForDockerImages(Project project) {
         Set<String> images = new HashSet<>();
@@ -62,6 +64,9 @@ public class DockerImageScanner {
 
     /**
      * Scans application.properties or application.yml and infers possible Docker images.
+     *
+     * @param project consumer project
+     * @return list of additional docker images from properties file dependencies
      */
     public static List<String> scanConfigFilesForDockerImages(Project project) {
         Set<String> images = new HashSet<>();
