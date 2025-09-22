@@ -45,7 +45,7 @@ gradlePlugin {
             implementationClass = "io.github.rkumar0206.k8gen.K8GenAiPluginPlugin"
             displayName = "K8 config generator AI Plugin"
             description = "Automatically generate k8 manifests using AI"
-            tags.set(['docker', 'kubernetes', 'docker-compose', 'ai', 'gemini', 'plugin', 'devOps'])
+            tags.set(['docker', 'kubernetes', 'docker-compose', 'ai', 'gemini', 'devOps'])
         }
     }
 }

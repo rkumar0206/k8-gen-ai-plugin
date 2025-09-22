@@ -12,7 +12,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.5.3'
     id 'io.spring.dependency-management' version '1.1.7'
-    id "com.rtb.k8gen" version "0.0.1"
+    id "io.github.rkumar0206.k8gen" version "0.0.1"
 }
 
 k8Gen {
