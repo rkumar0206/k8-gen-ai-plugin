@@ -11,7 +11,7 @@
         
 
 ## Requirements
-GEMINI_API_KEY as env varaiables
+GEMINI_API_KEY as env variables. <b>API KEY is not stored anywhere in the code.<b>
 
 ## How to use/configure this plugin?
 
@@ -31,7 +31,7 @@ k8Gen {
     model.set("gemini-2.5-flash")
 }
 ```
-2. Create k8-gen-config.json in root directory of your project
+2. Create `k8-gen-config.json` file in root directory of your project.
 - Use below json file to generate files according to your need
 
 ```json
