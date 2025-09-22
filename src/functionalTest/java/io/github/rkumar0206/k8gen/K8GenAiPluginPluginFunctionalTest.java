@@ -7,9 +7,6 @@ import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
 
-/**
- * A simple functional test for the 'org.example.greeting' plugin.
- */
 class K8GenAiPluginPluginFunctionalTest {
     @TempDir
     File projectDir;
