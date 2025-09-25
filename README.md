@@ -22,7 +22,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.5.3'
     id 'io.spring.dependency-management' version '1.1.7'
-    id "io.github.rkumar0206.k8gen" version "0.0.1"
+    id "io.github.rkumar0206.k8gen" version "0.0.2"
 }
 
 k8Gen {
@@ -89,5 +89,20 @@ k8Gen {
 ```
 
 ## How to run the task?
+
 Use command:
 `gradle generateK8DeploymentConfig`
+
+## How to provide GEMINI_API_KEY?
+Option 1: Pass GEMINI_API_KEY as env variables.<br>
+Option 2: Pass GEMINI_API_KEY as property.<br>
+Option 3: Pass geminiAPIKey as parameter.<br>
+ ```build.gradle
+
+k8Gen {
+    outputDir.set("/k8s")
+    jsonConfigFilePath.set("k8-gen-config.json")
+    model.set("gemini-2.5-flash")
+    geminiAPIKey.set("YOUR_API_KEY")
+}
+```
