@@ -26,7 +26,7 @@ plugins {
 }
 
 k8Gen {
-    outputDir.set("/k8s")
+    outputDir.set("/k8s")   // try wihout '/' if getting exception saying unable to create directory or folder
     jsonConfigFilePath.set("k8-gen-config.json")
     model.set("gemini-2.5-flash")
 }
