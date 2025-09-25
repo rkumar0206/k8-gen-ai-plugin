@@ -44,6 +44,7 @@ public class K8GenAiPluginPlugin implements Plugin<@NotNull Project> {
             task.getOutputDir().set(extension.getOutputDir());
             task.getConfigFilePath().set(extension.getJsonConfigFilePath());
             task.getModel().set(extension.getModel());
+            task.getGeminiAPIKey().set(extension.getGeminiAPIKey());
         });
     }
 }

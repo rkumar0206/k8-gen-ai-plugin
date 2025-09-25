@@ -42,6 +42,8 @@ public class K8GenExtension {
      */
     private final Property<String> model;
 
+    private final Property<String> geminiAPIKey;
+
     /**
      * Constructs a new `K8GenExtension` with default values.
      *
@@ -55,6 +57,6 @@ public class K8GenExtension {
         this.outputDir = objects.property(String.class).convention("/");
         this.jsonConfigFilePath = objects.property(String.class).convention("/k8-config.json");
         this.model = objects.property(String.class).convention("gemini-2.5-flash");
-
+        this.geminiAPIKey = objects.property(String.class).convention("");
     }
 }

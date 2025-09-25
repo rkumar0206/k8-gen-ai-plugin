@@ -7,6 +7,7 @@ import io.github.rkumar0206.k8gen.util.EnvVarExtractor;
 import io.github.rkumar0206.k8gen.util.FileExtractionUtil;
 import io.github.rkumar0206.k8gen.util.VersionUtils;
 import org.gradle.api.DefaultTask;
+import org.gradle.api.GradleException;
 import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.provider.Property;
 import org.gradle.api.tasks.*;
@@ -56,6 +57,11 @@ public abstract class GenerateK8DeploymentConfigTask extends DefaultTask {
     @Optional
     public abstract Property<String> getModel();
 
+    @Input
+    @Optional
+    public abstract Property<String> getGeminiAPIKey();
+
+    public static final String GEMINI_API_KEY = "GEMINI_API_KEY";
     /**
      * The main action method for the task.
      *
@@ -75,32 +81,56 @@ public abstract class GenerateK8DeploymentConfigTask extends DefaultTask {
      */
     @TaskAction
     public void generate() throws IOException {
-        String apiKey = System.getenv("GEMINI_API_KEY");
-        if (apiKey == null || apiKey.isEmpty()) {
-            throw new IllegalStateException("GEMINI_API_KEY not set in environment");
-        }
 
-        DirectoryProperty directoryProperty = getProject().getObjects().directoryProperty();
-        String outputDir = (getOutputDir().get().isEmpty() || getOutputDir().get().equals("/")) ? "/k8s" : getOutputDir().get();
-        directoryProperty.set(new File(outputDir));
+        try {
+            String apiKey = java.util.Optional.ofNullable(System.getenv(GEMINI_API_KEY))
+                    .filter(s -> !s.isBlank())
+                    .orElseGet(() -> {
+                        Object prop = getProject().findProperty(GEMINI_API_KEY);
+                        if (prop != null && !prop.toString().isBlank()) {
+                            return prop.toString();
+                        }
+                        if (getGeminiAPIKey().isPresent() && !getGeminiAPIKey().get().isBlank()) {
+                            return getGeminiAPIKey().get();
+                        }
+                        return null;
+                    });
 
-        File outputDirectory = directoryProperty.get().getAsFile();
-        boolean isOutputDirectoryCreated = outputDirectory.mkdirs();
 
-        if (Files.exists(outputDirectory.toPath()) || isOutputDirectoryCreated) {
-            DeploymentConfig deploymentConfig = getDeploymentConfig();
+            if (apiKey == null || apiKey.isBlank()) {
+                throw new IllegalStateException("GEMINI_API_KEY must be set (env var or -P).");
+            }
 
-            K8ConfigGeneratorAgent agent = new K8ConfigGeneratorAgent(apiKey, getModel().get());
-            String prompt = agent.generatePrompt(deploymentConfig, 1);
-            Files.writeString(new File(outputDirectory, "prompt.txt").toPath(), prompt);
+            DirectoryProperty directoryProperty = getProject().getObjects().directoryProperty();
+            String outputDir = (getOutputDir().get().isEmpty() || getOutputDir().get().equals("/")) ? "/k8s" : getOutputDir().get();
+            directoryProperty.set(new File(outputDir));
 
-            String generatedConfigs = agent.generateConfigs(deploymentConfig, 1);
-            Files.writeString(new File(outputDirectory, "generatedConfig.txt").toPath(), generatedConfigs);
+            File outputDirectory = directoryProperty.get().getAsFile();
+            boolean isOutputDirectoryCreated = outputDirectory.mkdirs();
 
-            Map<String, String> filesAndThereContent = FileExtractionUtil.extractFiles(generatedConfigs);
-            FileExtractionUtil.writeFilesToDisk(filesAndThereContent, outputDirectory);
-        }else {
-            throw new IOException("Unable to create the output directory.");
+            if (Files.exists(outputDirectory.toPath()) || isOutputDirectoryCreated) {
+                DeploymentConfig deploymentConfig = getDeploymentConfig();
+
+                K8ConfigGeneratorAgent agent = new K8ConfigGeneratorAgent(apiKey, getModel().get());
+//                String prompt = agent.generatePrompt(deploymentConfig, 1);
+//                Files.writeString(new File(outputDirectory, "prompt.txt").toPath(), prompt);
+
+                String generatedConfigs = agent.generateConfigs(deploymentConfig, 1);
+    //            Files.writeString(new File(outputDirectory, "generatedConfig.txt").toPath(), generatedConfigs);
+
+                Map<String, String> filesAndThereContent = FileExtractionUtil.extractFiles(generatedConfigs);
+                FileExtractionUtil.writeFilesToDisk(filesAndThereContent, outputDirectory);
+            }else {
+                throw new IOException("Unable to create the output directory.");
+            }
+        }  catch (Exception e) {
+            // Check if this was caused by an interrupt
+            if (e.getCause() instanceof InterruptedException || e instanceof InterruptedException) {
+                Thread.currentThread().interrupt(); // restore interrupt flag
+                throw new GradleException("Task was interrupted. Build cancelled.", e);
+            }
+            // Any other exception handling
+            throw new GradleException("Error while generating K8s config", e);
         }
     }
 

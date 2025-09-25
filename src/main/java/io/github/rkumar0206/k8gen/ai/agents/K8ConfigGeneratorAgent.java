@@ -6,6 +6,8 @@ import io.github.rkumar0206.k8gen.model.DeploymentConfig;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel;
 
+import java.time.Duration;
+
 /**
  * `K8ConfigGeneratorAgent` is an agent responsible for generating Kubernetes configuration files
  * based on provided deployment details. It uses a specified chat model (e.g., Google's Gemini) to
@@ -28,6 +30,7 @@ public class K8ConfigGeneratorAgent {
         this.model = GoogleAiGeminiChatModel.builder()
                 .apiKey(apiKey)
                 .modelName(modelName)
+                .timeout(Duration.ofMinutes(5))
 //                .temperature(0.2)
                 .build();
     }
